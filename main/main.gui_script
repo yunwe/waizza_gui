@@ -1,0 +1,44 @@
+-- Waizza Gui - Sample GUI Implimentation
+--
+-- © 2020 Saw Yu Nwe, Waizza Studio
+-- https://sawyunwe.com, https://waizza.com
+
+local btn_config = require('config.buttons')
+require('waizza.button')
+
+--function for button initialization
+local function init_buttons(self)
+	--created the button
+	local close_btn = Button:new('btn-close', self.name, btn_config[hash("btn-close")])
+	--add listener for click event
+	close_btn:add_action(button_events.click, function() 
+		msg.post("@system:", "exit", {code = 0})-- Exit the app 
+	end)
+
+	local submit_btn = Button:new('btn-submit', self.name, btn_config[hash("btn-yellow")]) --use btn-yellow for config
+	submit_btn:add_action(button_events.click, function() 
+
+	end)
+
+
+	
+	local clear_btn = Button:new('btn-clear', self.name, btn_config[hash("btn-yellow")]) --use the same config as the previos button
+	clear_btn:add_action(button_events.click, function() 
+
+	end)
+end
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	
+	--define the name of the gui
+	self.name = "gameplay"
+
+	--init buttons 
+	init_buttons(self)
+end
+
+function on_input(self, action_id, action)
+	--input handling for buttons
+	Button.on_input(self.name, action_id, action)
+end

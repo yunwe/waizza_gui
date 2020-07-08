@@ -14,3 +14,6 @@ input_method = HiddenInputField
 [project]
 title = waizza_gui
 
+[library]
+include_dirs = waizza
+
