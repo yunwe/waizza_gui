@@ -211,7 +211,7 @@ end
 -- @tparam hash action_id Action ID
 -- @tparam table action Action table
 function Button.on_input(gui, action_id, action)
-    --[[Checking button click ]]--
+    --[[Checking button click --]]
     if action_id == hash("touch") and action.pressed 
     then
         local node = pick_node(gui, action)
@@ -225,7 +225,7 @@ function Button.on_input(gui, action_id, action)
             release(node)
         end
     end
-
+    
     --[[Checking button hover enter and exit --]]
     if action_id == nil then 
         local node = pick_node(gui, action)
