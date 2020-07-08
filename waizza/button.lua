@@ -10,17 +10,11 @@
 local wz_pairs = require('waizza.wz_pairs')
 
 --Meta class
-Button = {
-    id = nil,
-    node = nil, 
-    ishover = false,
-    ispressed = false,
-    interactable = true,
-    actions = {}
-}
+local Button = {}
+
 
 --- event message hashes
-button_events = {
+Button.events = {
     click = hash("button_click"),		-- button click message
     release = hash("button_release"),		-- button release message
     pointer_enter = hash("button_pointer_enter"),        -- button pointer enter message
@@ -76,7 +70,7 @@ local function pressed(o)
     play_sprite(o, 'pressed')    
     
     --play callback list
-    do_actions(o, button_events.click)
+    do_actions(o, Button.events.click)
 end
 
 local function release(o)
@@ -93,7 +87,7 @@ local function release(o)
     play_sprite(o, 'normal')
     
     --play callback list
-    do_actions(o, button_events.release)
+    do_actions(o, Button.events.release)
 end
 
 local function remove_active(ui)
@@ -115,7 +109,7 @@ local function remove_active(ui)
     play_sprite(o, 'normal')
 
     --play callback list
-    do_actions(o, button_events.pointer_exit)
+    do_actions(o, Button.events.pointer_exit)
 end
 
 local function set_active_node(o)
@@ -130,7 +124,7 @@ local function set_active_node(o)
     play_sprite(o, 'hover')
 
     --play callback list
-    do_actions(o, button_events.pointer_enter)
+    do_actions(o, Button.events.pointer_enter)
 end
 ----------------------------------------------------------------------------------------------------
 -- Public interface
@@ -159,10 +153,10 @@ function Button:new (id, uiname, config, layer)
     o.config = config
     o.layer = layer or 0
     o.actions = {
-        [button_events.click] = {},
-        [button_events.release] = {},
-        [button_events.pointer_enter] = {},
-        [button_events.pointer_exit] = {}
+        [Button.events.click] = {},
+        [Button.events.release] = {},
+        [Button.events.pointer_enter] = {},
+        [Button.events.pointer_exit] = {}
     }
 
     add(o)
@@ -170,7 +164,7 @@ function Button:new (id, uiname, config, layer)
 end
 
 --- Button Event Listeners
--- @tparam hash event hash defined in button_events
+-- @tparam hash event hash defined in Button.events
 -- @tparam function callback Callback function for the event
 function Button:add_action(event, callback)
     local index = #self.actions[event]
@@ -178,7 +172,7 @@ function Button:add_action(event, callback)
 end
 
 --- Clear Button Event Listeners
--- @tparam hash event hash defined in button_events
+-- @tparam hash event hash defined in Button.events
 function Button:remove_actions(event)
     self.actions[event] = {}
 end
@@ -238,3 +232,5 @@ function Button.on_input(gui, action_id, action)
         end
     end
 end
+
+return Button

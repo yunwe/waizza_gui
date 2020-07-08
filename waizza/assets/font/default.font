@@ -1,6 +1,6 @@
-font: "/assets/font/abadi-mt-condensed-light-regular.ttf"
+font: "/waizza/assets/font/Ubuntu-Medium.ttf"
 material: "/builtins/fonts/font.material"
-size: 56
+size: 40
 antialias: 1
 alpha: 1.0
 outline_alpha: 0.0

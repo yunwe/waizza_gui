@@ -3,23 +3,27 @@
 -- © 2020 Saw Yu Nwe, Waizza Studio
 -- https://sawyunwe.com, https://waizza.com
 
-local btn_config = require('config.buttons')
-require('waizza.button')
+local gui_config = require('config.gui')
+local Button = require('waizza.button')
+local Input = require('waizza.input')
 
 --function for button initialization
 local function init_buttons(self)
 	
-	local submit_btn = Button:new('btn-submit', self.name, btn_config[hash("btn-yellow")]) --use btn-yellow for config
-	submit_btn:add_action(button_events.click, function() 
-
-	end)
-	submit_btn:add_action(button_events.release, function() 
-
+	local submit_btn = Button:new('btn-submit', self.name, gui_config[hash("btn")]) --use btn-yellow for config
+	submit_btn:add_action(Button.events.release, function() 
+		self.name_input:focus()
 	end) 
 
-	local clear_btn = Button:new('btn-clear', self.name, btn_config[hash("btn-yellow")]) --use the same config as the previos button
-	
-	
+	local clear_btn = Button:new('btn-clear', self.name, gui_config[hash("btn")]) --use the same config as the previos button
+	clear_btn:add_action(Button.events.release, function() 
+		self.name_input:clear()
+	end) 
+end
+
+--function for button initialization
+local function init_input(self)
+	self.name_input = Input:new('input-name', self.name, Input.TYPE_TEXT, gui_config[hash("input")])
 end
 
 function init(self)
@@ -30,19 +34,10 @@ function init(self)
 
 	--init buttons 
 	init_buttons(self)
+	init_input(self)
 end
 
 function on_input(self, action_id, action)
 	--input handling for buttons
 	Button.on_input(self.name, action_id, action)
-
-	if action_id == hash("touch") and action.pressed 
-	then
-
-		local node = gui.get_node('btn-close')  
-
-		if gui.pick_node(node, action.x, action.y) then
-			print("It's funcking working")
-		end
-	end
 end
