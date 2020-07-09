@@ -44,6 +44,54 @@ local function pick_node(ui, action)
 	return root.pick_node(ui, TYPE_OF, action)
 end
 
+local function type_char(ui, char)
+	local o = root.get_active(ui)
+	if o and o.typeof == TYPE_OF then
+		local s1 = o.text:sub(1, o.pointer)
+		local s2 = o.text:sub(o.pointer+1)
+		
+		o:set_text(s1 .. char .. s2)
+		o.pointer = o.pointer + 1
+	end
+end
+
+local function delete_char(ui)
+	local o = root.get_active(ui)
+	if o and o.typeof == TYPE_OF then
+		if o.pointer <= 0 then
+			return
+		end 
+		
+		local s1 = o.text:sub(1, o.pointer - 1)
+		local s2 = o.text:sub(o.pointer+1)
+		
+		o:set_text(s1 .. s2)
+		o.pointer = o.pointer - 1
+	end
+end
+
+local function move_cursor_left(ui)
+	local o = root.get_active(ui)
+	if o and o.typeof == TYPE_OF then
+		if o.pointer < 1 then
+			return
+		end
+		
+		o.pointer = o.pointer - 1
+	end
+end
+
+local function move_cursor_right(ui)
+	local o = root.get_active(ui)
+	if o and o.typeof == TYPE_OF then
+		if o.pointer >= o.text:len() then
+			return
+		end
+
+		o.pointer = o.pointer + 1
+	end
+end
+	
 local function remove_active(ui)
 	local o = root.get_active(ui)
 	if o and o.typeof == TYPE_OF then
@@ -51,6 +99,10 @@ local function remove_active(ui)
 		o:remove_focus()
 	end
 end
+
+
+
+
 --- Button input handler
 -- @tparam string gui Root GUI Name
 -- @tparam table node GUI Node
@@ -65,6 +117,24 @@ local function on_input(ui, action_id, action)
 		if node then
 			node:focus()
 		end
+	end
+
+	--[[Checking text type --]]
+	if action_id == hash("text") then
+		type_char(ui, action.text)
+	end
+
+	if action_id == hash("backspace") and action.pressed
+	then
+		delete_char(ui)
+	end
+	if action_id == hash("left") and action.pressed
+	then
+		move_cursor_left(ui)
+	end
+	if action_id == hash("right") and action.pressed
+	then
+		move_cursor_right(ui)
 	end
 end
 
@@ -97,6 +167,7 @@ function M:new (id, uiname, keyboard, config, placeholder, layer, setfocus)
 	o.layer = layer or 0
 	o.isfocus = setfocus or false
 	o.text = ""
+	o.pointer = 0
 	o.node_table = get_node(id)
 	o.node = o.node_table.root
 	o:clear()
@@ -109,8 +180,7 @@ function M:clear()
 	local node = self.node_table
 	
 	gui.set_enabled(node.placeholder, true)
-	gui.set_text(node.text, "")
-	
+	self:set_text('')
 	cursor_off(self)
 	self:play_sprite("normal")
 end
@@ -140,6 +210,16 @@ function M:remove_focus()
 
 	gui.hide_keyboard()
 end
+
+function M:set_text(text)
+	self.text = text
+	local node = self.node_table
+
+	gui.set_enabled(node.placeholder, false)
+	gui.set_text(node.text, self.text)
+end
+
+
 
 return M
 
