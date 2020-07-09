@@ -4,12 +4,14 @@
 -- https://sawyunwe.com, https://waizza.com
 
 local gui_config = require('config.gui')
-local Button = require('waizza.button')
-local Input = require('waizza.input')
+local waizza = require('waizza.waizza')
+
+--alias
+local Button = waizza.button
+local Input = waizza.input
 
 --function for button initialization
 local function init_buttons(self)
-	
 	local submit_btn = Button:new('btn-submit', self.name, gui_config[hash("btn")]) --use btn-yellow for config
 	submit_btn:add_action(Button.events.release, function() 
 		self.name_input:focus()
@@ -30,7 +32,7 @@ function init(self)
 	msg.post(".", "acquire_input_focus")
 	
 	--define the name of the gui
-	self.name = "gameplay"
+	self.name = "main"
 
 	--init buttons 
 	init_buttons(self)
@@ -38,6 +40,6 @@ function init(self)
 end
 
 function on_input(self, action_id, action)
-	--input handling for buttons
-	Button.on_input(self.name, action_id, action)
+	--input handling for waizza gui components
+	waizza.on_input(self.name, action_id, action)
 end

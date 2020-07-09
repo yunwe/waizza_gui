@@ -7,11 +7,11 @@
 -- @module Button
 
 
-local wz_pairs = require('waizza.wz_pairs')
+local root = require('waizza.internal.root')
+local TYPE_OF = 'button' -- constant
 
---Meta class
-local Button = {}
-
+--Button class inherit from root
+local Button = root:new()
 
 --- event message hashes
 Button.events = {
@@ -24,38 +24,6 @@ Button.events = {
 ----------------------------------------------------------------------------------------------------
 -- Private interface
 ----------------------------------------------------------------------------------------------------
-local map = {}
-map.activenode = -1
-local function add(o)
-    if not map[o.gui] then
-        map[o.gui] = {}
-    end
-    map[o.gui][o.id] = o
-end
-
-local function compare_layer(a, b)
-    return a.layer > b.layer
-end
-
-local function pick_node(ui, action)
-    for id, node in wz_pairs(map[ui], compare_layer) do 
-        if node.interactable and gui.pick_node(node.node, action.x, action.y) then
-            return node
-        end
-    end
-
-    return nil
-end
-
-local function play_sprite(o, sprite)
-    if not o.config then 
-        return 
-    end
-    
-    local anim = hash(o.config[sprite])
-    gui.play_flipbook(o.node, anim)
-end
-
 local function do_actions(o, event)
     for i, callback in  pairs(o.actions[event]) 
     do
@@ -67,7 +35,7 @@ local function pressed(o)
     o.ispressed = true
 
     --change sprite
-    play_sprite(o, 'pressed')    
+    o:play_sprite('pressed')    
     
     --play callback list
     do_actions(o, Button.events.click)
@@ -84,51 +52,81 @@ local function release(o)
     end
 
     --change sprite
-    play_sprite(o, 'normal')
+    o:play_sprite('normal')
     
     --play callback list
     do_actions(o, Button.events.release)
 end
 
-local function remove_active(ui)
-    if map.activenode == -1 then
-        return
-    end
-
-    local o  = map[ui][map.activenode] 
-    if not o then
-        return
-    end
-    
-    map.activenode = -1
-
-    o.ishover = false
-    o.ispressed = false
-
-    --change sprite
-    play_sprite(o, 'normal')
-
-    --play callback list
-    do_actions(o, Button.events.pointer_exit)
-end
-
 local function set_active_node(o)
-    if map.activenode ~= -1 and map.activenode ~= o.id then
-        remove_active(o.gui)
-    end
-    
-    map.activenode = o.id
+    root.set_active(o)
     o.ishover = true
 
     --change sprite
-    play_sprite(o, 'hover')
+    o:play_sprite('hover')
 
     --play callback list
     do_actions(o, Button.events.pointer_enter)
 end
+
+local function remove_active(ui)
+    local o = root.get_active(ui)
+    
+    if o and o.typeof == TYPE_OF then
+        root.remove_active()
+        
+        o.ishover = false
+        o.ispressed = false
+
+        --change sprite
+        o:play_sprite('normal')
+
+        --play callback list
+        do_actions(o, Button.events.pointer_exit)
+    end
+end
+
+local function pick_node(ui, action)
+    return root.pick_node(ui, TYPE_OF, action)
+end
+
+--- Button input handler
+-- @tparam string gui Root GUI Name
+-- @tparam table node GUI Node
+-- @tparam hash action_id Action ID
+-- @tparam table action Action table
+local function on_input(ui, action_id, action)
+    --[[Checking button click --]]
+    if action_id == hash("touch") and action.pressed 
+    then
+        local node = pick_node(ui, action)
+        if node then
+            pressed(node)
+        end
+    elseif action_id == hash("touch") and action.released
+    then
+        local node = pick_node(ui, action)
+        if node then
+            release(node)
+        end
+    end
+
+    --[[Checking button hover enter and exit --]]
+    if action_id == nil then 
+        local node = pick_node(ui, action)
+        if node then
+            if not node.ishover then
+                set_active_node(node)
+            end
+        else
+            remove_active(ui)
+        end
+    end
+end
 ----------------------------------------------------------------------------------------------------
 -- Public interface
 ----------------------------------------------------------------------------------------------------
+
 
 --- Button Constructor
 -- @tparam string id Button ID must be identical with Node ID
@@ -140,7 +138,7 @@ function Button:new (id, uiname, config, layer)
 
     assert(id, "Button id is not defined")
     assert(uiname, "Name of the GUI that the button attached need to be defined")
-    
+
     setmetatable(o, self)
     self.__index = self
 
@@ -149,7 +147,7 @@ function Button:new (id, uiname, config, layer)
     o.node = gui.get_node(hash(id))
     o.ishover = false
     o.ispressed = false
-    o.interactable = true
+--    o.interactable = true
     o.config = config
     o.layer = layer or 0
     o.actions = {
@@ -159,7 +157,7 @@ function Button:new (id, uiname, config, layer)
         [Button.events.pointer_exit] = {}
     }
 
-    add(o)
+    o:register(TYPE_OF, on_input)
     return o
 end
 
@@ -187,7 +185,7 @@ function Button:set_enable(toggle)
 
     --reset anim to normal if it is set to interactable
     if self.interactable then
-        play_sprite(self, 'normal')
+        self:play_sprite('normal')
     end
 end
 
@@ -196,41 +194,7 @@ end
 function Button:set_interactable(toggle)
     self.interactable = toggle
     local sprite = toggle and 'normal' or 'disabled' -- toggle ? 'normal' : 'disabled'
-    play_sprite(self, sprite)
-end
-
---- Button input handler
--- Call this handler from your root gui on_input function
--- @tparam string gui Root GUI Name
--- @tparam hash action_id Action ID
--- @tparam table action Action table
-function Button.on_input(gui, action_id, action)
-    --[[Checking button click --]]
-    if action_id == hash("touch") and action.pressed 
-    then
-        local node = pick_node(gui, action)
-        if node then
-            pressed(node)
-        end
-    elseif action_id == hash("touch") and action.released
-    then
-        local node = pick_node(gui, action)
-        if node then
-            release(node)
-        end
-    end
-    
-    --[[Checking button hover enter and exit --]]
-    if action_id == nil then 
-        local node = pick_node(gui, action)
-        if node then
-            if not node.ishover then
-                set_active_node(node)
-            end
-        else
-            remove_active(gui)
-        end
-    end
+    self:play_sprite(sprite)
 end
 
 return Button
