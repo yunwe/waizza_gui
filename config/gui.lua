@@ -13,6 +13,7 @@ local M = {
 		disabled = "button_04"
 	},
 	[hash("input")] = {
+		padding = 42,
 		normal = "input_01",
 		focus = "input_02"
 	}

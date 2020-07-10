@@ -303,7 +303,7 @@ nodes {
 }
 nodes {
   position {
-    x: 249.0
+    x: 0.0
     y: 532.0
     z: 0.0
     w: 1.0
@@ -377,7 +377,7 @@ nodes {
   id: "input-name/input"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
-  pivot: PIVOT_CENTER
+  pivot: PIVOT_W
   adjust_mode: ADJUST_MODE_FIT
   parent: "input-name"
   layer: ""
@@ -397,7 +397,7 @@ nodes {
 }
 nodes {
   position {
-    x: -270.0
+    x: 40.0
     y: 0.0
     z: 0.0
     w: 1.0
@@ -460,7 +460,7 @@ nodes {
 }
 nodes {
   position {
-    x: 0.0
+    x: 327.0
     y: 0.0
     z: 0.0
     w: 1.0
@@ -523,7 +523,7 @@ nodes {
 }
 nodes {
   position {
-    x: -270.0
+    x: 40.0
     y: 0.0
     z: 0.0
     w: 1.0
