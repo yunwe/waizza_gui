@@ -25,7 +25,8 @@ end
 
 --function for button initialization
 local function init_input(self)
-	self.name_input = Input:new('input-name', self.name, Input.TYPE_TEXT, gui_config[hash("input")])
+	self.name_input = Input:new('input-name', self.name, Input.TYPE_TEXT, gui_config[hash("input")], 'name', true)
+	self.name_input = Input:new('input-password', self.name, Input.TYPE_TEXT, gui_config[hash("input")], 'password')
 end
 
 function init(self)

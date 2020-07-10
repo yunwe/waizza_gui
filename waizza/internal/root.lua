@@ -20,7 +20,15 @@ local map = {}
 map.activenode = -1
 
 local function compare_layer(a, b)
-	return a.layer > b.layer
+	local default_layer = {
+		button = 0,
+		input = 1000
+	}
+
+	local a_layer = a.layer or default_layer[a.typeof]
+	local b_layer = b.layer or default_layer[b.typeof]
+	
+	return a_layer > b_layer
 end
 
 local function add(o)

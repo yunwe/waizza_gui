@@ -9,7 +9,7 @@ local root = require('waizza.internal.root')
 local TYPE_OF = 'input' -- constant
 
 local M = root:new()
-
+local tab_index_table = {}
 ----------------------------------------------------------------------------------------------------
 -- Private interface
 ----------------------------------------------------------------------------------------------------
@@ -112,6 +112,19 @@ local function remove_active(ui)
 	end
 end
 
+local function tab_index(ui)
+	local o = root.get_active(ui)
+	if o and o.typeof == TYPE_OF then
+		root.remove_active(ui)
+		o:remove_focus()
+		
+		local next_index = o.tabindex + 1
+		if #tab_index_table >= next_index then
+			tab_index_table[next_index]:focus()
+		end
+	end
+end
+
 --- Button input handler
 -- @tparam string gui Root GUI Name
 -- @tparam table node GUI Node
@@ -133,17 +146,20 @@ local function on_input(ui, action_id, action)
 		type_char(ui, action.text)
 	end
 
-	if action_id == hash("backspace") and action.pressed
-	then
-		delete_char(ui)
-	end
-	if action_id == hash("left") and action.pressed
-	then
-		move_cursor(ui, -1)
-	end
-	if action_id == hash("right") and action.pressed
-	then
-		move_cursor(ui, 1)
+	 
+	--[[Checking Key Triggers --]]
+	if action.pressed then
+		if action_id == hash("backspace") then
+			delete_char(ui)
+		elseif action_id == hash("left") then
+			move_cursor(ui, -1)
+		elseif action_id == hash("right") then
+			move_cursor(ui, 1)
+		elseif action_id == hash("enter") then
+			remove_active(ui)
+		elseif  action_id == hash("tab") then
+			tab_index(ui)
+		end
 	end
 end
 
@@ -151,14 +167,13 @@ end
 -- Public interface
 ----------------------------------------------------------------------------------------------------
 
-
 --- Input Constructor
 -- @tparam string id Input ID must be identical with Node ID
 -- @tparam string uiname Root GUI Name
--- @param table config Config table for input background sprites    
--- @param number layer Input with larger layer number get pick node if two or more button is in the same pixel point
+-- @param table config Config table for input apperance (background sprites, and padding)
+-- @param string placeholder Placeholder text
 -- @param bool setfocus set auto focus
-function M:new (id, uiname, keyboard, config, placeholder, layer, setfocus)
+function M:new (id, uiname, keyboard, config, placeholder, setfocus)
 	local o = {}
 
 	assert(id, "Input id is not defined")
@@ -167,19 +182,24 @@ function M:new (id, uiname, keyboard, config, placeholder, layer, setfocus)
 	setmetatable(o, self)
 	self.__index = self
 	
-	
 	o.id = id
 	o.gui = uiname
 	o.keyboard = keyboard or gui.KEYBOARD_TYPE_DEFAULT
 	o.config = config
-	o.placeholder = placeholder or nil
-	o.layer = layer or 0
-	o.isfocus = setfocus or false
 	o.text = ""
 	o.cursor_pos = 0
 	o.node_table = get_node(id)
 	o.node = o.node_table.root
-	o:clear()
+
+	o.tabindex = #tab_index_table + 1  --for sequential keyboard navigation
+	tab_index_table[o.tabindex] = o
+
+	gui.set_text(o.node_table.placeholder, placeholder or '')  -- set placeholder text
+	if setfocus then --setfocus 
+		o:focus()
+	else
+		o:clear()
+	end
 
 	o:register(TYPE_OF, on_input)
 	return o
