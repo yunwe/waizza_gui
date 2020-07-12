@@ -7,6 +7,14 @@ fonts {
   name: "italic"
   font: "/waizza/assets/font/italic.font"
 }
+fonts {
+  name: "japanese"
+  font: "/waizza/assets/font/japanese.font"
+}
+fonts {
+  name: "myanmar"
+  font: "/waizza/assets/font/myanmar.font"
+}
 textures {
   name: "prefab"
   texture: "/waizza/assets/sprites/prefab.atlas"
@@ -105,7 +113,7 @@ nodes {
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
   text: ""
-  font: "default"
+  font: "japanese"
   id: "text"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE

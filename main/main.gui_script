@@ -25,8 +25,11 @@ end
 
 --function for button initialization
 local function init_input(self)
-	self.name_input = Input:new('input-name', self.name, Input.TYPE_TEXT, gui_config[hash("input")], 'name', true)
-	self.name_input = Input:new('input-password', self.name, Input.TYPE_TEXT, gui_config[hash("input")], 'password')
+	local theme = gui_config[hash("input")]
+	self.name_input = Input:new('input-name', self.name, gui.KEYBOARD_TYPE_DEFAULT, theme, 'name', true)
+	Input:new('input-password', self.name, gui.KEYBOARD_TYPE_PASSWORD, theme, 'password')
+	Input:new('input-number', self.name, gui.KEYBOARD_TYPE_NUMBER_PAD, theme, 'number')
+	Input:new('input-email', self.name, gui.KEYBOARD_TYPE_EMAIL, theme, 'email')
 end
 
 function init(self)

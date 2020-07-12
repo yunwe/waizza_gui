@@ -5,7 +5,8 @@
 
 --- Input module
 -- @module M
-local root = require('waizza.internal.root')
+local root = require 'waizza.internal.root'
+
 local TYPE_OF = 'input' -- constant
 
 local M = root:new()
@@ -26,6 +27,20 @@ local function get_text_width(node, text)
 	local dot_width = gui.get_text_metrics(font, '.', 0, false, 0, 0).width
 	
 	return (text_width - dot_width) * scale.x
+end
+
+--- Mask text by replacing every character with a mask
+-- character
+-- @param text
+-- @param mask
+-- @return Masked text
+local function mask_text(text)
+	local mask = "*"
+	local masked_text = ""
+	for pos, uchar in utf8.next, text do
+		masked_text = masked_text .. mask
+	end
+	return masked_text
 end
 
 local function get_node(id)
@@ -57,13 +72,13 @@ local function set_cursor_pos(o, pos)
 	local cursor = o.node_table.cursor
 	local text_node = o.node_table.text
 	
-	local text_len = o.text:len()
+	local text_len = utf8.len(o.text)
 	if pos < 0 or pos > text_len then
 		return
 	end 
 
 	o.cursor_pos = pos
-	local x_pos = get_text_width(text_node, string.sub(o.text, 1, pos)) + o.config.padding
+	local x_pos = get_text_width(text_node, utf8.sub(o.text, 1, pos)) + o.config.padding
 	gui.set_position(cursor, vmath.vector3(x_pos, 0, 0))
 end
 
@@ -74,11 +89,12 @@ end
 local function type_char(ui, char)
 	local o = root.get_active(ui)
 	if o and o.typeof == TYPE_OF then
-		local s1 = o.text:sub(1, o.cursor_pos)
-		local s2 = o.text:sub(o.cursor_pos+1)
+		print("type => " .. char)
+		local s1 = utf8.sub(o.text, 1, o.cursor_pos)
+		local s2 = utf8.sub(o.text, o.cursor_pos+1)
 		
 		o:set_text(s1 .. char .. s2)
-		set_cursor_pos(o, o.cursor_pos + 1)
+		set_cursor_pos(o, o.cursor_pos + utf8.len(char))
 	end
 end
 
@@ -89,8 +105,8 @@ local function delete_char(ui)
 			return
 		end 
 		
-		local s1 = o.text:sub(1, o.cursor_pos - 1)
-		local s2 = o.text:sub(o.cursor_pos + 1)
+		local s1 = utf8.sub(o.text, 1, o.cursor_pos - 1)
+		local s2 = utf8.sub(o.text, o.cursor_pos + 1)
 		
 		o:set_text(s1 .. s2)
 		set_cursor_pos(o, o.cursor_pos - 1)
@@ -144,6 +160,8 @@ local function on_input(ui, action_id, action)
 	--[[Checking text type --]]
 	if action_id == hash("text") then
 		type_char(ui, action.text)
+	elseif action_id == hash("marked_text") then
+		print('marked text')
 	end
 
 	 
@@ -228,7 +246,7 @@ function M:focus()
 	self:play_sprite("focus")
 
 	gui.reset_keyboard()
-	gui.show_keyboard(self.keyboard, true)
+	gui.show_keyboard(self.keyboard, false)
 end
 
 function M:remove_focus()
@@ -245,9 +263,10 @@ end
 function M:set_text(text)
 	self.text = text
 	local node = self.node_table
-
-	gui.set_enabled(node.placeholder, text:len() <= 0)
-	gui.set_text(node.text, self.text)
+	gui.set_enabled(node.placeholder, utf8.len(text) <= 0)
+	
+	local display = self.keyboard == gui.KEYBOARD_TYPE_PASSWORD and mask_text(text) or self.text
+	gui.set_text(node.text, display)
 end
 
 return M

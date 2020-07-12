@@ -14,6 +14,7 @@ input_method = HiddenInputField
 
 [project]
 title = waizza_gui
+dependencies = https://github.com/d954mas/defold-utf8/archive/master.zip
 
 [library]
 include_dirs = waizza
