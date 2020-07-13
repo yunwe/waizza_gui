@@ -3,12 +3,12 @@
 -- © 2020 Saw Yu Nwe, Waizza Studio
 -- https://sawyunwe.com, https://waizza.com
 
---- Input module
--- @module M
-local root = require 'waizza.internal.root'
 
+local root = require 'waizza.internal.root'
 local TYPE_OF = 'input' -- constant
 
+--- Input module
+-- @module M
 local M = root:new()
 local tab_index_table = {}
 ----------------------------------------------------------------------------------------------------
@@ -156,14 +156,6 @@ local function on_input(ui, action_id, action)
 			node:focus()
 		end
 	end
-
-	--[[Checking text type --]]
-	if action_id == hash("text") then
-		type_char(ui, action.text)
-	elseif action_id == hash("marked_text") then
-		print('marked text')
-	end
-
 	 
 	--[[Checking Key Triggers --]]
 	if action.pressed then
@@ -178,6 +170,11 @@ local function on_input(ui, action_id, action)
 		elseif  action_id == hash("tab") then
 			tab_index(ui)
 		end
+	end
+
+	--[[Checking text type --]]
+	if action_id == hash("text") then
+		type_char(ui, action.text)
 	end
 end
 
@@ -263,7 +260,7 @@ end
 function M:set_text(text)
 	self.text = text
 	local node = self.node_table
-	gui.set_enabled(node.placeholder, utf8.len(text) <= 0)
+	gui.set_enabled(node.placeholder, text and utf8.len(text) <= 0)
 	
 	local display = self.keyboard == gui.KEYBOARD_TYPE_PASSWORD and mask_text(text) or self.text
 	gui.set_text(node.text, display)

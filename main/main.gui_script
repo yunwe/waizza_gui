@@ -9,27 +9,38 @@ local waizza = require('waizza.waizza')
 --alias
 local Button = waizza.button
 local Input = waizza.input
+local Toggle = waizza.toggle
 
 --function for button initialization
-local function init_buttons(self)
+local function init_nodes(self)
+	--init inputs
+	local theme = gui_config[hash("input")]	
+	local name_input = Input:new('input-name', self.name, gui.KEYBOARD_TYPE_DEFAULT, theme, 'name', true)
+	Input:new('input-password', self.name, gui.KEYBOARD_TYPE_PASSWORD, theme, 'password')
+	Input:new('input-number', self.name, gui.KEYBOARD_TYPE_NUMBER_PAD, theme, 'number')
+	Input:new('input-email', self.name, gui.KEYBOARD_TYPE_EMAIL, theme, 'email')
+	
+	--init buttons
 	local submit_btn = Button:new('btn-submit', self.name, gui_config[hash("btn")]) --use btn-yellow for config
 	submit_btn:add_action(Button.events.release, function() 
-		self.name_input:focus()
+		name_input:focus()
 	end) 
 
 	local clear_btn = Button:new('btn-clear', self.name, gui_config[hash("btn")]) --use the same config as the previos button
 	clear_btn:add_action(Button.events.release, function() 
-		self.name_input:clear()
+		name_input:clear()
 	end) 
-end
 
---function for button initialization
-local function init_input(self)
-	local theme = gui_config[hash("input")]
-	self.name_input = Input:new('input-name', self.name, gui.KEYBOARD_TYPE_DEFAULT, theme, 'name', true)
-	Input:new('input-password', self.name, gui.KEYBOARD_TYPE_PASSWORD, theme, 'password')
-	Input:new('input-number', self.name, gui.KEYBOARD_TYPE_NUMBER_PAD, theme, 'number')
-	Input:new('input-email', self.name, gui.KEYBOARD_TYPE_EMAIL, theme, 'email')
+	--init checkbox (toggle with no toggle-group)
+	theme = gui_config[hash('checkbox')]
+	local magazine_chk = Toggle:new('chk-magazine', self.name, theme)
+	magazine_chk:add_action(Toggle.events.on_value_change, function()
+		print("mgz check")
+		print(magazine_chk.checked)
+	end)
+	Toggle:new('chk-radio', self.name, theme)
+	Toggle:new('chk-fb', self.name, theme)
+	
 end
 
 function init(self)
@@ -38,9 +49,8 @@ function init(self)
 	--define the name of the gui
 	self.name = "main"
 
-	--init buttons 
-	init_buttons(self)
-	init_input(self)
+	--init nodes
+	init_nodes(self)
 end
 
 function on_input(self, action_id, action)

@@ -3,15 +3,13 @@
 -- © 2020 Saw Yu Nwe, Waizza Studio
 -- https://sawyunwe.com, https://waizza.com
 
---- Button module
--- @module Button
-
-
 local root = require('waizza.internal.root')
 local TYPE_OF = 'button' -- constant
 
---Button class inherit from root
-local Button = root:new()
+
+--- Button module
+-- @module Button
+local Button = root:new() --Button class inherit from root
 
 --- event message hashes
 Button.events = {
@@ -24,13 +22,6 @@ Button.events = {
 ----------------------------------------------------------------------------------------------------
 -- Private interface
 ----------------------------------------------------------------------------------------------------
-local function do_actions(o, event)
-    for i, callback in  pairs(o.actions[event]) 
-    do
-        callback()
-    end
-end
-
 local function pressed(o)
     o.ispressed = true
 
@@ -38,7 +29,7 @@ local function pressed(o)
     o:play_sprite('pressed')    
     
     --play callback list
-    do_actions(o, Button.events.click)
+    o:do_actions(Button.events.click)
 end
 
 local function release(o)
@@ -55,7 +46,7 @@ local function release(o)
     o:play_sprite('normal')
     
     --play callback list
-    do_actions(o, Button.events.release)
+    o:do_actions(Button.events.release)
 end
 
 local function set_active_node(o)
@@ -66,7 +57,7 @@ local function set_active_node(o)
     o:play_sprite('hover')
 
     --play callback list
-    do_actions(o, Button.events.pointer_enter)
+    o:do_actions(Button.events.pointer_enter)
 end
 
 local function remove_active(ui)
@@ -82,7 +73,7 @@ local function remove_active(ui)
         o:play_sprite('normal')
 
         --play callback list
-        do_actions(o, Button.events.pointer_exit)
+        o:do_actions(Button.events.pointer_exit)
     end
 end
 
@@ -147,7 +138,6 @@ function Button:new (id, uiname, config, layer)
     o.node = gui.get_node(hash(id))
     o.ishover = false
     o.ispressed = false
---    o.interactable = true
     o.config = config
     o.layer = layer or 0
     o.actions = {
@@ -159,20 +149,6 @@ function Button:new (id, uiname, config, layer)
 
     o:register(TYPE_OF, on_input)
     return o
-end
-
---- Button Event Listeners
--- @tparam hash event hash defined in Button.events
--- @tparam function callback Callback function for the event
-function Button:add_action(event, callback)
-    local index = #self.actions[event]
-    self.actions[event][index] = callback
-end
-
---- Clear Button Event Listeners
--- @tparam hash event hash defined in Button.events
-function Button:remove_actions(event)
-    self.actions[event] = {}
 end
 
 --- Set Button Visiblilty

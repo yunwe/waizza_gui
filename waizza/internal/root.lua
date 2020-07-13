@@ -22,7 +22,8 @@ map.activenode = -1
 local function compare_layer(a, b)
 	local default_layer = {
 		button = 0,
-		input = 1000
+		input = 1000,
+		toggle = 1000
 	}
 
 	local a_layer = a.layer or default_layer[a.typeof]
@@ -68,6 +69,29 @@ function M:play_sprite(sprite)
 	gui.play_flipbook(self.node, anim)
 end
 
+--- Add Event Listeners
+-- @tparam hash event hash defined in [type].events
+-- @tparam function callback Callback function for the event
+function M:add_action(event, callback)
+	local index = #self.actions[event]
+	self.actions[event][index] = callback
+end
+
+--- Clear Event Listeners
+-- @tparam hash event hash defined in Button.events
+function M:remove_actions(event)
+	self.actions[event] = {}
+end
+
+function M:do_actions(event)
+	for i, callback in pairs(self.actions[event]) 
+	do
+		callback()
+	end
+end
+----------------------------------------------------------------------------------------------------
+-- Public static interface
+----------------------------------------------------------------------------------------------------
 function M.pick_node(ui, typeof, action)
 	for id, node in wz_pairs(map[ui], compare_layer) do 
 		if node.typeof == typeof and node.interactable and gui.pick_node(node.node, action.x, action.y) then

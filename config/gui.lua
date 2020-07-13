@@ -16,7 +16,11 @@ local M = {
 		padding = 42,
 		normal = "input_01",
 		focus = "input_02"
-	}
+	},
+	[hash("checkbox")] = {
+		normal = "checkbox_01",
+		focus = "checkbox_02"
+	},
 }
 
 return M
