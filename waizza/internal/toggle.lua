@@ -3,8 +3,6 @@
 -- © 2020 Saw Yu Nwe, Waizza Studio
 -- https://sawyunwe.com, https://waizza.com
 
---- Toggle module
--- @module M
 local root = require 'waizza.internal.root'
 
 local TYPE_OF = 'toggle' -- constant
@@ -21,14 +19,32 @@ M.events = {
 ----------------------------------------------------------------------------------------------------
 -- Private interface
 ----------------------------------------------------------------------------------------------------
-local function pressed(o)
-	o.checked = not o.checked
-
-	--change sprite
-	o:play_sprite(o.checked and 'focus' or 'normal')
-
+local function checkbox_pressed(o)
+	o:check(not o.checked)
+	
 	--play callback list
 	o:do_actions(M.events.on_value_change)
+end
+
+local function radio_pressed(o)
+	--only set check value if it's uncheck 
+	if not o.checked then
+		o:check(true)
+
+		--uncheck other radio buttons in same group
+		o.group:child_value_change(o)
+		
+		--play callback list
+		o:do_actions(M.events.on_value_change)
+	end
+end
+
+local function pressed(o)
+	if o.group then
+		radio_pressed(o)
+	else
+		checkbox_pressed(o)
+	end
 end
 
 local function pick_node(ui, action)
@@ -79,8 +95,22 @@ function M:new (id, uiname, config, group, checked)
 		[M.events.on_value_change] = {}
 	}
 
+	if group then
+		group:add(o)
+	end
 	o:register(TYPE_OF, on_input)
 	return o
+end
+
+--Change check value without triggering action
+function M:check(toggle)
+	if self.checked == toggle then
+		return
+	end
+	
+	self.checked = toggle
+	--change sprite
+	self:play_sprite(toggle and 'focus' or 'normal')
 end
 
 return M

@@ -10,6 +10,7 @@ local waizza = require('waizza.waizza')
 local Button = waizza.button
 local Input = waizza.input
 local Toggle = waizza.toggle
+local ToggleGroup = waizza.toggle_group
 
 --function for button initialization
 local function init_nodes(self)
@@ -39,7 +40,13 @@ local function init_nodes(self)
 		print(magazine_chk.checked)
 	end)
 	Toggle:new('chk-radio', self.name, theme)
-	Toggle:new('chk-fb', self.name, theme)
+	Toggle:new('chk-blog', self.name, theme)
+
+	--init radio buttons (toggle with ToggleGroup)
+	local media_gp = ToggleGroup:new('gp_media', self.name)
+	Toggle:new('rdo-magazine', self.name, theme, media_gp)
+	Toggle:new('rdo-radio', self.name, theme, media_gp)
+	Toggle:new('rdo-blog', self.name, theme, media_gp)
 	
 end
 

@@ -57,7 +57,9 @@ function M:register(typeof, callback)
 
 	--set callback for later use
 	self.typeof = typeof
-	input_events[typeof] = callback	
+	if callback then
+		input_events[typeof] = callback	
+	end
 end
 
 function M:play_sprite(sprite)
