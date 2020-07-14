@@ -23,7 +23,8 @@ local function compare_layer(a, b)
 	local default_layer = {
 		button = 0,
 		input = 1000,
-		toggle = 1000
+		toggle = 1000,
+		slider = 1000
 	}
 
 	local a_layer = a.layer or default_layer[a.typeof]
@@ -110,8 +111,6 @@ function M.set_active(o)
 	end
 
 	map.activenode = o.id
-
---	o:set_active()
 end
 
 function M.get_active(ui)

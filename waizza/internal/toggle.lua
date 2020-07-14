@@ -7,7 +7,7 @@ local root = require 'waizza.internal.root'
 
 local TYPE_OF = 'toggle' -- constant
 
---- Input module
+--- Toggle module
 -- @module M
 local M = root:new()
 

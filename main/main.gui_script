@@ -11,6 +11,7 @@ local Button = waizza.button
 local Input = waizza.input
 local Toggle = waizza.toggle
 local ToggleGroup = waizza.toggle_group
+local Slider = waizza.slider
 
 --function for button initialization
 local function init_nodes(self)
@@ -47,7 +48,12 @@ local function init_nodes(self)
 	Toggle:new('rdo-magazine', self.name, theme, media_gp)
 	Toggle:new('rdo-radio', self.name, theme, media_gp)
 	Toggle:new('rdo-blog', self.name, theme, media_gp)
-	
+
+	--init slider
+	local slider = Slider:new('slider', self.name, 0.5)
+	slider:add_action(Slider.events.on_value_change, function()
+		print(slider.value)
+	end)
 end
 
 function init(self)
