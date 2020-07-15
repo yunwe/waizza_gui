@@ -126,7 +126,7 @@ function M:new (id, uiname, value)
 end
 
 --- Set value to slider
--- @param number val The value of slider ( 0 < x < 1)
+-- @param number val The value of slider ( 0 <= val <= 1)
 function M:set(val)
 	if self.value == val then
 		return
@@ -138,9 +138,13 @@ function M:set(val)
 	local prefab = self.node_table
 	local origin = self.node_table.origin
 	local pos_x = (val * prefab.width * prefab.scale) +  origin.x
-	
 	gui.set_position(prefab.knob, vmath.vector3(pos_x, origin.y, origin.z))
-	gui.set_size(prefab.fill, vmath.vector3(val * prefab.width, prefab.height, 0))
+
+	local slice9 = gui.get_slice9(prefab.fill)
+	local min_fill = slice9.x + slice9.z
+	local size_x = val * prefab.width 
+	size_x = size_x < min_fill and min_fill or size_x
+	gui.set_size(prefab.fill, vmath.vector3(size_x, prefab.height, 0))
 end
 
 return M
