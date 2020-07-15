@@ -50,10 +50,8 @@ local function init_nodes(self)
 	Toggle:new('rdo-blog', self.name, theme, media_gp)
 
 	--init slider
-	local slider = Slider:new('slider', self.name, 0.5)
-	slider:add_action(Slider.events.on_value_change, function()
-		print(slider.value)
-	end)
+	Slider:new('slider', self.name)
+	Slider:new('slider_v', self.name, Slider.VERTICAL, vmath.vector4(0, 8, 0, 8))
 end
 
 function init(self)

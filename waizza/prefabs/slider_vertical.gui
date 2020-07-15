@@ -29,8 +29,8 @@ nodes {
     w: 1.0
   }
   size {
-    x: 258.0
-    y: 17.0
+    x: 17.0
+    y: 300.0
     z: 0.0
     w: 1.0
   }
@@ -46,7 +46,7 @@ nodes {
   id: "bg"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
-  pivot: PIVOT_W
+  pivot: PIVOT_N
   adjust_mode: ADJUST_MODE_FIT
   layer: ""
   inherit_alpha: true
@@ -83,8 +83,8 @@ nodes {
     w: 1.0
   }
   size {
-    x: 14.0
-    y: 17.0
+    x: 17.0
+    y: 14.0
     z: 0.0
     w: 1.0
   }
@@ -100,7 +100,7 @@ nodes {
   id: "fill"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
-  pivot: PIVOT_W
+  pivot: PIVOT_N
   adjust_mode: ADJUST_MODE_FIT
   parent: "bg"
   layer: ""
@@ -138,8 +138,8 @@ nodes {
     w: 1.0
   }
   size {
-    x: 258.0
-    y: 17.0
+    x: 17.0
+    y: 300.0
     z: 0.0
     w: 1.0
   }
@@ -155,7 +155,7 @@ nodes {
   id: "border"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
-  pivot: PIVOT_W
+  pivot: PIVOT_N
   adjust_mode: ADJUST_MODE_FIT
   layer: ""
   inherit_alpha: true
@@ -192,8 +192,8 @@ nodes {
     w: 1.0
   }
   size {
-    x: 27.0
-    y: 27.0
+    x: 17.0
+    y: 17.0
     z: 0.0
     w: 1.0
   }
@@ -224,7 +224,7 @@ nodes {
   clipping_inverted: false
   alpha: 1.0
   template_node_child: false
-  size_mode: SIZE_MODE_AUTO
+  size_mode: SIZE_MODE_MANUAL
 }
 material: "/builtins/materials/gui.material"
 adjust_reference: ADJUST_REFERENCE_PARENT

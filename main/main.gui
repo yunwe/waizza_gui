@@ -311,7 +311,7 @@ nodes {
 }
 nodes {
   position {
-    x: 44.0
+    x: 39.0
     y: 563.0
     z: 0.0
     w: 1.0
@@ -586,7 +586,7 @@ nodes {
 }
 nodes {
   position {
-    x: 44.0
+    x: 39.0
     y: 453.0
     z: 0.0
     w: 1.0
@@ -861,7 +861,7 @@ nodes {
 }
 nodes {
   position {
-    x: 44.0
+    x: 39.0
     y: 343.0
     z: 0.0
     w: 1.0
@@ -1136,7 +1136,7 @@ nodes {
 }
 nodes {
   position {
-    x: 44.0
+    x: 39.0
     y: 233.0
     z: 0.0
     w: 1.0
@@ -1411,7 +1411,7 @@ nodes {
 }
 nodes {
   position {
-    x: 517.0
+    x: 503.0
     y: 567.0
     z: 0.0
     w: 1.0
@@ -1473,7 +1473,7 @@ nodes {
 }
 nodes {
   position {
-    x: 534.0
+    x: 520.0
     y: 340.0
     z: 0.0
     w: 1.0
@@ -1591,7 +1591,7 @@ nodes {
 }
 nodes {
   position {
-    x: 696.0
+    x: 682.0
     y: 340.0
     z: 0.0
     w: 1.0
@@ -1708,7 +1708,7 @@ nodes {
 }
 nodes {
   position {
-    x: 843.0
+    x: 829.0
     y: 340.0
     z: 0.0
     w: 1.0
@@ -1825,7 +1825,7 @@ nodes {
 }
 nodes {
   position {
-    x: 514.0
+    x: 500.0
     y: 414.0
     z: 0.0
     w: 1.0
@@ -1887,7 +1887,7 @@ nodes {
 }
 nodes {
   position {
-    x: 537.0
+    x: 523.0
     y: 500.0
     z: 0.0
     w: 1.0
@@ -2005,7 +2005,7 @@ nodes {
 }
 nodes {
   position {
-    x: 699.0
+    x: 685.0
     y: 500.0
     z: 0.0
     w: 1.0
@@ -2122,7 +2122,7 @@ nodes {
 }
 nodes {
   position {
-    x: 846.0
+    x: 832.0
     y: 500.0
     z: 0.0
     w: 1.0
@@ -2239,8 +2239,8 @@ nodes {
 }
 nodes {
   position {
-    x: 523.0
-    y: 274.0
+    x: 517.0
+    y: 270.0
     z: 0.0
     w: 1.0
   }
@@ -2302,14 +2302,14 @@ nodes {
     w: 1.0
   }
   color {
-    x: 1.0
-    y: 1.0
-    z: 1.0
+    x: 0.0
+    y: 0.0
+    z: 0.0
     w: 1.0
   }
   type: TYPE_BOX
   blend_mode: BLEND_MODE_ALPHA
-  texture: "prefab/slider_bg"
+  texture: "prefab/slider_fill"
   id: "slider/bg"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -2319,17 +2319,17 @@ nodes {
   layer: ""
   inherit_alpha: true
   slice9 {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 0.0
+    x: 7.0
+    y: 7.0
+    z: 7.0
+    w: 7.0
   }
   clipping_mode: CLIPPING_MODE_STENCIL
   clipping_visible: true
   clipping_inverted: false
-  alpha: 1.0
+  alpha: 0.8
   template_node_child: true
-  size_mode: SIZE_MODE_AUTO
+  size_mode: SIZE_MODE_MANUAL
 }
 nodes {
   position {
@@ -2357,7 +2357,7 @@ nodes {
     w: 1.0
   }
   color {
-    x: 1.0
+    x: 0.0
     y: 1.0
     z: 1.0
     w: 1.0
@@ -2429,17 +2429,17 @@ nodes {
   layer: ""
   inherit_alpha: true
   slice9 {
-    x: 0.0
-    y: 0.0
-    z: 0.0
-    w: 0.0
+    x: 7.0
+    y: 7.0
+    z: 7.0
+    w: 7.0
   }
   clipping_mode: CLIPPING_MODE_NONE
   clipping_visible: true
   clipping_inverted: false
   alpha: 1.0
   template_node_child: true
-  size_mode: SIZE_MODE_AUTO
+  size_mode: SIZE_MODE_MANUAL
 }
 nodes {
   position {
@@ -2495,6 +2495,266 @@ nodes {
   alpha: 1.0
   template_node_child: true
   size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 26.0
+    y: 537.0
+    z: 0.0
+    w: 1.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+    z: 0.0
+    w: 1.0
+  }
+  color {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  type: TYPE_TEMPLATE
+  id: "slider_v"
+  layer: ""
+  inherit_alpha: true
+  alpha: 1.0
+  template: "/waizza/prefabs/slider_vertical.gui"
+  template_node_child: false
+}
+nodes {
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  size {
+    x: 17.0
+    y: 300.0
+    z: 0.0
+    w: 1.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  type: TYPE_BOX
+  blend_mode: BLEND_MODE_ALPHA
+  texture: "prefab/slider_fill"
+  id: "slider_v/bg"
+  xanchor: XANCHOR_NONE
+  yanchor: YANCHOR_NONE
+  pivot: PIVOT_N
+  adjust_mode: ADJUST_MODE_FIT
+  parent: "slider_v"
+  layer: ""
+  inherit_alpha: true
+  slice9 {
+    x: 7.0
+    y: 7.0
+    z: 7.0
+    w: 7.0
+  }
+  clipping_mode: CLIPPING_MODE_STENCIL
+  clipping_visible: true
+  clipping_inverted: false
+  alpha: 0.8
+  template_node_child: true
+  size_mode: SIZE_MODE_MANUAL
+}
+nodes {
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  size {
+    x: 17.0
+    y: 14.0
+    z: 0.0
+    w: 1.0
+  }
+  color {
+    x: 0.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  type: TYPE_BOX
+  blend_mode: BLEND_MODE_ALPHA
+  texture: "prefab/slider_fill"
+  id: "slider_v/fill"
+  xanchor: XANCHOR_NONE
+  yanchor: YANCHOR_NONE
+  pivot: PIVOT_N
+  adjust_mode: ADJUST_MODE_FIT
+  parent: "slider_v/bg"
+  layer: ""
+  inherit_alpha: true
+  slice9 {
+    x: 7.0
+    y: 7.0
+    z: 7.0
+    w: 7.0
+  }
+  clipping_mode: CLIPPING_MODE_NONE
+  clipping_visible: true
+  clipping_inverted: false
+  alpha: 1.0
+  template_node_child: true
+  size_mode: SIZE_MODE_MANUAL
+}
+nodes {
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  size {
+    x: 17.0
+    y: 300.0
+    z: 0.0
+    w: 1.0
+  }
+  color {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  type: TYPE_BOX
+  blend_mode: BLEND_MODE_ALPHA
+  texture: "prefab/slider_border"
+  id: "slider_v/border"
+  xanchor: XANCHOR_NONE
+  yanchor: YANCHOR_NONE
+  pivot: PIVOT_N
+  adjust_mode: ADJUST_MODE_FIT
+  parent: "slider_v"
+  layer: ""
+  inherit_alpha: true
+  slice9 {
+    x: 7.0
+    y: 7.0
+    z: 7.0
+    w: 7.0
+  }
+  clipping_mode: CLIPPING_MODE_NONE
+  clipping_visible: true
+  clipping_inverted: false
+  alpha: 1.0
+  template_node_child: true
+  size_mode: SIZE_MODE_MANUAL
+}
+nodes {
+  position {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  rotation {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 1.0
+  }
+  scale {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  size {
+    x: 17.0
+    y: 17.0
+    z: 0.0
+    w: 1.0
+  }
+  color {
+    x: 1.0
+    y: 1.0
+    z: 1.0
+    w: 1.0
+  }
+  type: TYPE_BOX
+  blend_mode: BLEND_MODE_ALPHA
+  texture: "prefab/knob"
+  id: "slider_v/knob"
+  xanchor: XANCHOR_NONE
+  yanchor: YANCHOR_NONE
+  pivot: PIVOT_CENTER
+  adjust_mode: ADJUST_MODE_FIT
+  parent: "slider_v"
+  layer: ""
+  inherit_alpha: true
+  slice9 {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+    w: 0.0
+  }
+  clipping_mode: CLIPPING_MODE_NONE
+  clipping_visible: true
+  clipping_inverted: false
+  alpha: 1.0
+  overridden_fields: 1
+  template_node_child: true
+  size_mode: SIZE_MODE_MANUAL
 }
 material: "/builtins/materials/gui.material"
 adjust_reference: ADJUST_REFERENCE_PARENT

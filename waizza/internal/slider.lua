@@ -11,11 +11,14 @@ local TYPE_OF = 'slider' -- constant
 -- @module M
 local M = root:new()
 
+--constants
+M.HORIZONTAL = 0 
+M.VERTICAL = 1
+
 --- event message hashes
 M.events = {
 	on_value_change = hash("on_value_change"),		-- on vlaue change message
 }
-
 ----------------------------------------------------------------------------------------------------
 -- Private interface
 ----------------------------------------------------------------------------------------------------
@@ -26,20 +29,66 @@ end
 
 local function get_node(id)
 	local node = {}
-	node.node = gui.get_node(path(id, 'bg'))
-	node.scale = gui.get_scale(node.node).x
-	node.width = gui.get_size(node.node).x
-	node.height = gui.get_size(node.node).y
-	node.origin = gui.get_position(node.node)
+	local base = gui.get_node(path(id, 'bg'))
+	
+	node.scale = gui.get_scale(base)
+	node.size = gui.get_size(base)
+	node.origin = gui.get_position(base)
+
+	node.base = base
 	node.fill = gui.get_node(path(id, 'fill'))
 	node.knob = gui.get_node(path(id, 'knob'))
+	node.border = gui.get_node(path(id, 'border'))
 	return node
 end
 
+local function clamp(value, min, max)
+	return value < min and min or value > max and max or value
+end
+
 local function get_val(o, action)
-	local x = (action.x - o.node_table.origin.x) / (o.node_table.width * o.node_table.scale)
-	x = x < 0 and 0 or x > 1 and 1 or x --clamp x between 0 & 1
-	return x 
+	local movement, width
+
+	if o.direction == M.HORIZONTAL then
+		movement =  action.x - o.node_table.origin.x
+		width = o.node_table.size.x * o.node_table.scale.x
+	else
+		movement =  o.node_table.origin.y - action.y
+		width = o.node_table.size.y * o.node_table.scale.y
+	end 
+	
+	return clamp(movement / width, 0, 1)
+end
+
+local function left_to_right(prefab, val, padding)
+	local origin = prefab.origin
+	local width = prefab.size.x * prefab.scale.x
+	local min = origin.x + padding.x
+	local max = origin.x + width - padding.z
+	local pos_x = clamp(origin.x + val * width, min, max) 
+	gui.set_position(prefab.knob, vmath.vector3(pos_x, origin.y, origin.z))
+
+	local slice9 = gui.get_slice9(prefab.fill)
+	local min_fill = slice9.x + slice9.z
+	local size_x = val * prefab.size.x 
+	size_x = size_x < min_fill and min_fill or size_x
+	gui.set_size(prefab.fill, vmath.vector3(size_x, prefab.size.y, 0))
+end
+
+local function top_to_bottom(prefab, val, padding)
+	local origin = prefab.origin
+	local height = prefab.size.y * prefab.scale.y
+	local max = origin.y - padding.y
+	local min = origin.y - height + padding.w
+	local pos_y = clamp(origin.y - val * height, min, max) 
+	
+	gui.set_position(prefab.knob, vmath.vector3(origin.x, pos_y, origin.z))
+
+	local slice9 = gui.get_slice9(prefab.fill)
+	local min_fill = slice9.y + slice9.w
+	local size = val * prefab.size.y
+	size = size < min_fill and min_fill or size
+	gui.set_size(prefab.fill, vmath.vector3(prefab.size.x, size, 0))
 end
 
 local function is_pressed(o)
@@ -100,7 +149,7 @@ end
 -- @tparam string id Slider ID must be identical with Template ID
 -- @tparam string uiname Root GUI Name
 -- @param number value The value of slider ( 0 < x < 1)
-function M:new (id, uiname, value)
+function M:new (id, uiname, direction, padding, value)
 	local o = {}
 
 	assert(id, "Input id is not defined")
@@ -111,7 +160,8 @@ function M:new (id, uiname, value)
 
 	o.id = id
 	o.gui = uiname
-	o.config = config
+	o.direction = direction or M.HORIZONTAL
+	o.padding = padding or vmath.vector4(0)
 	o.node_table = get_node(id)
 	o.node = o.node_table.knob
 	o.ispressed = false
@@ -119,9 +169,12 @@ function M:new (id, uiname, value)
 	o.actions = {
 		[M.events.on_value_change] = {}
 	}
+
 	
 	o:register(TYPE_OF, on_input)
 	o:set(value or 0)
+
+	
 	return o
 end
 
@@ -136,15 +189,11 @@ function M:set(val)
 	self:do_actions(M.events.on_value_change)
 	
 	local prefab = self.node_table
-	local origin = self.node_table.origin
-	local pos_x = (val * prefab.width * prefab.scale) +  origin.x
-	gui.set_position(prefab.knob, vmath.vector3(pos_x, origin.y, origin.z))
-
-	local slice9 = gui.get_slice9(prefab.fill)
-	local min_fill = slice9.x + slice9.z
-	local size_x = val * prefab.width 
-	size_x = size_x < min_fill and min_fill or size_x
-	gui.set_size(prefab.fill, vmath.vector3(size_x, prefab.height, 0))
+	if self.direction == M.HORIZONTAL then
+		left_to_right(prefab, val, self.padding)
+	else
+		top_to_bottom(prefab, val, self.padding)
+	end
 end
 
 return M

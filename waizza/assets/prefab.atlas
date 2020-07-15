@@ -31,10 +31,6 @@ images {
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
 images {
-  image: "/waizza/assets/sprites/slider_bg.png"
-  sprite_trim_mode: SPRITE_TRIM_MODE_OFF
-}
-images {
   image: "/waizza/assets/sprites/slider_border.png"
   sprite_trim_mode: SPRITE_TRIM_MODE_OFF
 }
