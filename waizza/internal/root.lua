@@ -19,14 +19,11 @@ map.activenode = -1
 
 local function compare_layer(a, b)
 	local default_layer = {
-		button = 0,
-		input = 1000,
-		toggle = 1000,
-		slider = 1000
+		button = 0
 	}
 
-	local a_layer = a.layer or default_layer[a.typeof]
-	local b_layer = b.layer or default_layer[b.typeof]
+	local a_layer = a.layer or default_layer[a.typeof] or 1000
+	local b_layer = b.layer or default_layer[b.typeof] or 1000
 	
 	return a_layer > b_layer
 end
@@ -87,7 +84,7 @@ end
 function M:do_actions(event)
 	for i, callback in pairs(self.actions[event]) 
 	do
-		callback()
+		callback(self)
 	end
 end
 ----------------------------------------------------------------------------------------------------

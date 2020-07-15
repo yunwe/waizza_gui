@@ -12,6 +12,7 @@ local Input = waizza.input
 local Toggle = waizza.toggle
 local ToggleGroup = waizza.toggle_group
 local Slider = waizza.slider
+local ScrollView = waizza.scroll_view
 
 --function for button initialization
 local function init_nodes(self)
@@ -51,7 +52,9 @@ local function init_nodes(self)
 
 	--init slider
 	Slider:new('slider', self.name)
-	Slider:new('slider_v', self.name, Slider.VERTICAL, vmath.vector4(0, 8, 0, 8))
+
+	--init scrollview
+	ScrollView:new('scrollview', self.name, true, true)
 end
 
 function init(self)

@@ -161,19 +161,17 @@ function M:new (id, uiname, direction, padding, value)
 	o.id = id
 	o.gui = uiname
 	o.direction = direction or M.HORIZONTAL
-	o.padding = padding or vmath.vector4(0)
 	o.node_table = get_node(id)
 	o.node = o.node_table.knob
+	o.padding = padding or gui.get_slice9(o.node_table.fill)
 	o.ispressed = false
 	
 	o.actions = {
 		[M.events.on_value_change] = {}
 	}
-
 	
 	o:register(TYPE_OF, on_input)
 	o:set(value or 0)
-
 	
 	return o
 end
@@ -194,6 +192,18 @@ function M:set(val)
 	else
 		top_to_bottom(prefab, val, self.padding)
 	end
+end
+
+--- Set slider Visiblilty
+-- @tparam bool toggle Visibility
+function M:set_enable(toggle)
+	local node = self.node_table
+	gui.set_enabled(node.base, toggle)
+	gui.set_enabled(node.fill, toggle)
+	gui.set_enabled(node.knob, toggle)
+	gui.set_enabled(node.border, toggle)
+	
+	self.interactable = toggle 
 end
 
 return M
