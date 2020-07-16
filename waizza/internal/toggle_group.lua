@@ -41,7 +41,19 @@ function M:add(child)
 	self.children[child.id] = child
 end
 
+function M:result()
+	for id, child in pairs(self.children) do 
+		if child.checked then
+			return child
+		end
+	end
+end
+
 function M:child_value_change(active_child)
+	if not active_child.checked then
+		return
+	end
+	
 	for id, child in pairs(self.children) do 
 		if id ~= active_child.id then
 			child:check(false)
