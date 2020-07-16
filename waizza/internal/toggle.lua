@@ -19,31 +19,14 @@ M.events = {
 ----------------------------------------------------------------------------------------------------
 -- Private interface
 ----------------------------------------------------------------------------------------------------
-local function checkbox_pressed(o)
-	o:check(not o.checked)
-	
-	--play callback list
-	o:do_actions(M.events.on_value_change)
-end
-
-local function radio_pressed(o)
-	--only set check value if it's uncheck 
-	if not o.checked then
-		o:check(true)
-
-		--uncheck other radio buttons in same group
-		o.group:child_value_change(o)
-		
-		--play callback list
-		o:do_actions(M.events.on_value_change)
-	end
-end
-
 local function pressed(o)
 	if o.group then
-		radio_pressed(o)
+		--only set check value if it's uncheck 
+		if not o.checked then
+			o:check(true)
+		end
 	else
-		checkbox_pressed(o)
+		o:check(not o.checked)
 	end
 end
 
@@ -89,7 +72,6 @@ function M:new (id, uiname, config, group, checked)
 	o.gui = uiname
 	o.config = config
 	o.group = group or nil
-	o.checked = checked or false
 	o.node = gui.get_node(hash(id))
 	o.actions = {
 		[M.events.on_value_change] = {}
@@ -98,19 +80,30 @@ function M:new (id, uiname, config, group, checked)
 	if group then
 		group:add(o)
 	end
+
 	o:register(TYPE_OF, on_input)
+	o:check(checked or false)
 	return o
 end
 
---Change check value without triggering action
+--Change check value
+-- @param bool toggle check value
 function M:check(toggle)
 	if self.checked == toggle then
 		return
 	end
 	
 	self.checked = toggle
+	if self.group then
+		--uncheck other radio buttons in same group
+		self.group:child_value_change(self)
+	end
+	
 	--change sprite
 	self:play_sprite(toggle and 'focus' or 'normal')
+
+	--play callback list
+	self:do_actions(M.events.on_value_change)
 end
 
 return M
