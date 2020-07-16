@@ -4,7 +4,7 @@
 -- https://sawyunwe.com, https://waizza.com
 
 local root = require 'waizza.internal.root'
-local slider = require 'waizza.internal.slider'
+local Slider = require 'waizza.internal.slider'
 
 local TYPE_OF = 'scrollview' -- constant
 
@@ -48,16 +48,15 @@ local function get_node(self)
 	node.viewport = gui.get_node(path(self.id, 'viewport'))
 	node.content = gui.get_node(path(self.id, 'content'))
 	
-	node.slider_v = slider:new(path(self.id, 'slider_v'), self.gui, slider.VERTICAL)
-	node.slider_v:add_action(slider.events.on_value_change, function(s)
+	node.slider_v = Slider:new(path(self.id, 'slider_v'), self.gui, Slider.VERTICAL)
+	node.slider_v:add_action(Slider.events.on_value_change, function(s)
 		move_y(self, s.value)
 	end)
 
-	node.slider_h = slider:new(path(self.id, 'slider_h'), self.gui, slider.HORIZONTAL)
-	node.slider_h:add_action(slider.events.on_value_change, function(s)
+	node.slider_h = Slider:new(path(self.id, 'slider_h'), self.gui, Slider.HORIZONTAL)
+	node.slider_h:add_action(Slider.events.on_value_change, function(s)
 		move_x(self, s.value)
 	end)
-	
 
 	node.slider_v:set_enable(not self.touchonly and self.vertical)
 	node.slider_h:set_enable(not self.touchonly and self.horizontal)
@@ -69,12 +68,68 @@ local function pick_node(ui, action)
 	return root.pick_node(ui, TYPE_OF, action)
 end
 
+local function clamp(value, min, max)
+	return value < min and min or value > max and max or value
+end
+
+local function is_pressed(o)
+	return o and o.typeof == TYPE_OF and o.ispressed
+end
+
+local function pressed(o, action)
+	o.ispressed = true
+	o.origin = action
+	o.gap = gui.get_position(o.node_table.content)
+	root.set_active(o)
+end
+
+local function moving(ui, action)
+	local active = root.get_active(ui)
+	if is_pressed(active) then
+		local size = gui.get_size(active.node_table.content) - gui.get_size(active.node_table.viewport)
+		local x = active.horizontal and action.x - active.origin.x or 0
+		local y = active.vertical and action.y - active.origin.y or 0
+		
+		x = clamp(active.gap.x + x, -size.x, 0)
+		y = clamp(active.gap.y + y, 0, size.y)
+
+		active.node_table.slider_h:set(-x / size.x)
+		active.node_table.slider_v:set(y / size.y)
+		
+		gui.set_position(active.node_table.content, vmath.vector3(x, y, 0))
+	end
+end
+
+local function release(ui, action)
+	local active = root.get_active(ui)
+	if is_pressed(active) then
+		active.ispressed = false
+		active.origin = nil
+		active.gap = nil
+	end
+end
+
 --- Button input handler
 -- @tparam string gui Root GUI Name
 -- @tparam hash action_id Action ID
 -- @tparam table action Action table
 local function on_input(ui, action_id, action)
+	--[[Checking button click --]]
+	if action_id == hash("touch") and action.pressed 
+	then
+		local node = pick_node(ui, action)
+		if node then
+			pressed(node, action)
+		end
+	elseif action_id == hash("touch") and action.released
+	then
+		release(ui, action)
+	end
 
+	--[[Checking dragging --]]
+	if action_id == nil then 
+		moving(ui, action)
+	end
 end
 ----------------------------------------------------------------------------------------------------
 -- Public interface
@@ -102,7 +157,7 @@ function M:new (id, uiname, horizontal, vertical, touchonly)
 	o.touchonly =  touchonly
 
 	o.node_table = get_node(o)
-	o.node = o.node_table.knob
+	o.node = o.node_table.viewport
 
 	o.actions = {
 		[M.events.on_value_change] = {}
