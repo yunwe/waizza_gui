@@ -89,7 +89,6 @@ end
 local function type_char(ui, char)
 	local o = root.get_active(ui)
 	if o and o.typeof == TYPE_OF then
-		print("type => " .. char)
 		local s1 = utf8.sub(o.text, 1, o.cursor_pos)
 		local s2 = utf8.sub(o.text, o.cursor_pos+1)
 		

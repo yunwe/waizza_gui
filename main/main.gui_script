@@ -19,42 +19,60 @@ local function init_nodes(self)
 	--init inputs
 	local theme = gui_config[hash("input")]	
 	local name_input = Input:new('input-name', self.name, gui.KEYBOARD_TYPE_DEFAULT, theme, 'name', true)
-	Input:new('input-password', self.name, gui.KEYBOARD_TYPE_PASSWORD, theme, 'password')
-	Input:new('input-number', self.name, gui.KEYBOARD_TYPE_NUMBER_PAD, theme, 'number')
-	Input:new('input-email', self.name, gui.KEYBOARD_TYPE_EMAIL, theme, 'email')
+	local pw_input = Input:new('input-password', self.name, gui.KEYBOARD_TYPE_PASSWORD, theme, 'password')
+	local number_input = Input:new('input-number', self.name, gui.KEYBOARD_TYPE_NUMBER_PAD, theme, 'number')
 	
+	--init checkbox (toggle with no toggle-group)
+	theme = gui_config[hash('checkbox')]
+	local magazine_chk = Toggle:new('chk-magazine', self.name, theme)
+	local radio_chk = Toggle:new('chk-radio', self.name, theme)
+	local blog_chk = Toggle:new('chk-blog', self.name, theme)
+
+	--init radio buttons (toggle with ToggleGroup)
+	local media_gp = ToggleGroup:new('gp_media', self.name)
+	local magazine_rdo = Toggle:new('rdo-magazine', self.name, theme, media_gp, true)
+	Toggle:new('rdo-radio', self.name, theme, media_gp)
+	Toggle:new('rdo-blog', self.name, theme, media_gp)
+
+	--init slider
+	local label = gui.get_node('slider_lbl')
+	local slider = Slider:new('slider', self.name)
+	slider:add_action(Slider.events.on_value_change, function(s)
+		gui.set_text(label, string.format('Slider Value - %.2f' , s.value))
+	end)
+	
+	--init scrollview
+	local s_view = ScrollView:new('scrollview', self.name, false, true)
+
 	--init buttons
 	local submit_btn = Button:new('btn-submit', self.name, gui_config[hash("btn")]) --use btn-yellow for config
 	submit_btn:add_action(Button.events.release, function() 
-		name_input:focus()
+		print(name_input.text)
+		print(pw_input.text)
+		print(number_input.text)
+		
+		print(magazine_chk.checked)
+		print(radio_chk.checked)
+		print(blog_chk.checked)
+
+		print(media_gp:result().id)
+
+		print(slider.value)
 	end) 
 
 	local clear_btn = Button:new('btn-clear', self.name, gui_config[hash("btn")]) --use the same config as the previos button
 	clear_btn:add_action(Button.events.release, function() 
 		name_input:clear()
+		pw_input:clear()
+		number_input:clear()
+
+		magazine_chk:check(false)
+		radio_chk:check(false)
+		blog_chk:check(false)
+
+		magazine_rdo:check(true)
+		slider:set(0)
 	end) 
-
-	--init checkbox (toggle with no toggle-group)
-	theme = gui_config[hash('checkbox')]
-	local magazine_chk = Toggle:new('chk-magazine', self.name, theme)
-	magazine_chk:add_action(Toggle.events.on_value_change, function()
-		print("mgz check")
-		print(magazine_chk.checked)
-	end)
-	Toggle:new('chk-radio', self.name, theme)
-	Toggle:new('chk-blog', self.name, theme)
-
-	--init radio buttons (toggle with ToggleGroup)
-	local media_gp = ToggleGroup:new('gp_media', self.name)
-	Toggle:new('rdo-magazine', self.name, theme, media_gp)
-	Toggle:new('rdo-radio', self.name, theme, media_gp)
-	Toggle:new('rdo-blog', self.name, theme, media_gp)
-
-	--init slider
-	Slider:new('slider', self.name)
-
-	--init scrollview
-	ScrollView:new('scrollview', self.name, true, true)
 end
 
 function init(self)
