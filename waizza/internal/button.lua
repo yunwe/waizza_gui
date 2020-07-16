@@ -22,6 +22,8 @@ Button.events = {
 ----------------------------------------------------------------------------------------------------
 -- Private interface
 ----------------------------------------------------------------------------------------------------
+--- Button state[mouse/pointer pressed] call from on_input
+-- @tparam table o Button
 local function pressed(o)
     o.ispressed = true
 
@@ -32,6 +34,8 @@ local function pressed(o)
     o:do_actions(Button.events.click)
 end
 
+--- Button state[mouse/pointer release] call from on_input
+-- @tparam table o Button
 local function release(o)
     if not o.ispressed then
         return
@@ -49,6 +53,8 @@ local function release(o)
     o:do_actions(Button.events.release)
 end
 
+--- Button state[on mouse/pointer hover] call from on_input
+-- @tparam table o Button
 local function set_active_node(o)
     root.set_active(o)
     o.ishover = true
@@ -60,6 +66,8 @@ local function set_active_node(o)
     o:do_actions(Button.events.pointer_enter)
 end
 
+--- Button state[on mouse/pointer exit] call from on_input
+-- @string ui Active UI Name
 local function remove_active(ui)
     local o = root.get_active(ui)
     
@@ -77,6 +85,9 @@ local function remove_active(ui)
     end
 end
 
+--- pick node from ui, filter with type
+-- @string ui Active UI Name
+-- @tparam table action Action table
 local function pick_node(ui, action)
     return root.pick_node(ui, TYPE_OF, action)
 end

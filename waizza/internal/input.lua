@@ -88,13 +88,23 @@ end
 
 local function type_char(ui, char)
 	local o = root.get_active(ui)
-	if o and o.typeof == TYPE_OF then
-		local s1 = utf8.sub(o.text, 1, o.cursor_pos)
-		local s2 = utf8.sub(o.text, o.cursor_pos+1)
-		
-		o:set_text(s1 .. char .. s2)
-		set_cursor_pos(o, o.cursor_pos + utf8.len(char))
+	if o and o.typeof ~= TYPE_OF then
+		return
 	end
+
+	--remove letter for number type input
+	if o.keyboard == gui.KEYBOARD_TYPE_NUMBER_PAD then
+		char = string.match(char, '%d')
+		if not char then
+			return
+		end
+	end
+
+	local s1 = utf8.sub(o.text, 1, o.cursor_pos)
+	local s2 = utf8.sub(o.text, o.cursor_pos+1)
+
+	o:set_text(s1 .. char .. s2)
+	set_cursor_pos(o, o.cursor_pos + utf8.len(char))
 end
 
 local function delete_char(ui)
