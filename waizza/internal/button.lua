@@ -107,6 +107,7 @@ local function on_input(ui, action_id, action)
         local node = pick_node(ui, action)
         if node then
             if not node.ishover then
+                remove_active(ui)
                 set_active_node(node)
             end
         else
