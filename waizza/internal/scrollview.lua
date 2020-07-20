@@ -24,13 +24,19 @@ local function path(id, part)
 	return mid
 end
 
+local function set_position(self, pos)
+	local content = self.node_table.content
+	gui.set_position(content, pos)
+	self:do_actions(M.events.on_value_change)
+end
+
 local function move_x(self, amount)
 	local node = self.node_table
 
 	local total_amt = gui.get_size(node.content).x - gui.get_size(node.viewport).x
 	local movement = total_amt * amount
 	local pos = gui.get_position(node.content)
-	gui.set_position(node.content, vmath.vector3(-movement, pos.y, pos.z))
+	set_position(self, vmath.vector3(-movement, pos.y, pos.z))
 end
 
 local function move_y(self, amount)
@@ -39,7 +45,7 @@ local function move_y(self, amount)
 	local total_amt = gui.get_size(node.content).y - gui.get_size(node.viewport).y
 	local movement = total_amt * amount
 	local pos = gui.get_position(node.content)
-	gui.set_position(node.content, vmath.vector3(pos.x, movement, pos.z))
+	set_position(self, vmath.vector3(pos.x, movement, pos.z))
 end
 
 local function get_node(self)
@@ -96,7 +102,7 @@ local function moving(ui, action)
 		active.node_table.slider_h:set(-x / size.x)
 		active.node_table.slider_v:set(y / size.y)
 		
-		gui.set_position(active.node_table.content, vmath.vector3(x, y, 0))
+		set_position(active, vmath.vector3(x, y, 0))
 	end
 end
 
@@ -135,7 +141,7 @@ end
 -- Public interface
 ----------------------------------------------------------------------------------------------------
 
---- Input Constructor
+--- ScrollView Constructor
 -- @tparam string id Slider ID must be identical with Template ID
 -- @tparam string uiname Root GUI Name
 -- @param bool horizontal Move in horizontal direction
@@ -163,7 +169,7 @@ function M:new (id, uiname, horizontal, vertical, touchonly)
 		[M.events.on_value_change] = {}
 	}
 
-	o:register(TYPE_OF, on_input)
+	o:register(TYPE_OF, M.events, on_input)
 	return o
 end
 

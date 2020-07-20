@@ -152,14 +152,8 @@ function Button:new (id, uiname, config, layer)
     o.ispressed = false
     o.config = config
     o.layer = layer or 0
-    o.actions = {
-        [Button.events.click] = {},
-        [Button.events.release] = {},
-        [Button.events.pointer_enter] = {},
-        [Button.events.pointer_exit] = {}
-    }
-
-    o:register(TYPE_OF, on_input)
+    
+    o:register(TYPE_OF, Button.events, on_input)
     return o
 end
 

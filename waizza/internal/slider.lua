@@ -24,7 +24,7 @@ M.events = {
 ----------------------------------------------------------------------------------------------------
 local function path(id, part)
 	local mid = string.format('%s/%s', id, part)
-	return hash(mid)
+	return mid
 end
 
 local function get_node(id)
@@ -145,9 +145,11 @@ end
 -- Public interface
 ----------------------------------------------------------------------------------------------------
 
---- Input Constructor
+--- Slider Constructor
 -- @tparam string id Slider ID must be identical with Template ID
 -- @tparam string uiname Root GUI Name
+-- @param number direction Direction constant
+-- @param vector4 padding Padding for knob
 -- @param number value The value of slider ( 0 < x < 1)
 function M:new (id, uiname, direction, padding, value)
 	local o = {}
@@ -166,11 +168,7 @@ function M:new (id, uiname, direction, padding, value)
 	o.padding = padding or gui.get_slice9(o.node_table.fill)
 	o.ispressed = false
 	
-	o.actions = {
-		[M.events.on_value_change] = {}
-	}
-	
-	o:register(TYPE_OF, on_input)
+	o:register(TYPE_OF, M.events, on_input)
 	o:set(value or 0)
 	
 	return o

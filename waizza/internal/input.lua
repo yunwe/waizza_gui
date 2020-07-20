@@ -11,12 +11,17 @@ local TYPE_OF = 'input' -- constant
 -- @module M
 local M = root:new()
 local tab_index_table = {}
+
+--- event message hashes
+M.events = {
+	on_value_change = hash("on_value_change"),		-- on vlaue change message
+}
 ----------------------------------------------------------------------------------------------------
 -- Private interface
 ----------------------------------------------------------------------------------------------------
 local function path(id, part)
 	local mid = string.format('%s/%s', id, part)
-	return hash(mid)
+	return mid
 end
 
 -- calculate text width with font with respect to trailing space
@@ -194,7 +199,8 @@ end
 --- Input Constructor
 -- @tparam string id Input ID must be identical with Node ID
 -- @tparam string uiname Root GUI Name
--- @param table config Config table for input apperance (background sprites, and padding)
+-- @param number keyboard gui keyboard constant (gui.KEYBOARD_TYPE_*)
+-- @param table config Config table for input apperance
 -- @param string placeholder Placeholder text
 -- @param bool setfocus set auto focus
 function M:new (id, uiname, keyboard, config, placeholder, setfocus)
@@ -219,16 +225,17 @@ function M:new (id, uiname, keyboard, config, placeholder, setfocus)
 	tab_index_table[o.tabindex] = o
 
 	gui.set_text(o.node_table.placeholder, placeholder or '')  -- set placeholder text
+	o:register(TYPE_OF, M.events, on_input)
 	if setfocus then --setfocus 
 		o:focus()
 	else
 		o:clear()
 	end
-
-	o:register(TYPE_OF, on_input)
+	
 	return o
 end
 
+--- Clear input text
 function M:clear()
 	local node = self.node_table
 	
@@ -240,6 +247,7 @@ function M:clear()
 	cursor_off(self)
 end
 
+--- Set focus on input
 function M:focus()
 	root.set_active(self)
 	
@@ -255,6 +263,7 @@ function M:focus()
 	gui.show_keyboard(self.keyboard, false)
 end
 
+--- Remove focus from input
 function M:remove_focus()
 	self.isfocus = false
 	local node = self.node_table
@@ -266,6 +275,8 @@ function M:remove_focus()
 	gui.hide_keyboard()
 end
 
+--- Set text for input
+-- @param string text Text to be stored in input
 function M:set_text(text)
 	self.text = text
 	local node = self.node_table
@@ -273,6 +284,9 @@ function M:set_text(text)
 	
 	local display = self.keyboard == gui.KEYBOARD_TYPE_PASSWORD and mask_text(text) or self.text
 	gui.set_text(node.text, display)
+
+	self:do_actions(M.events.on_value_change)
+	
 end
 
 return M

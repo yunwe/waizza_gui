@@ -47,9 +47,15 @@ function M:new()
 	return o
 end
 
-function M:register(typeof, callback)
+function M:register(typeof, events, callback)
 	--add to map
 	add(self)
+
+	--set empty action table
+	self.actions = {}
+	for i, event in pairs(events) do
+		self.actions[event] = {}
+	end
 
 	--set callback for later use
 	self.typeof = typeof
@@ -76,7 +82,7 @@ function M:add_action(event, callback)
 end
 
 --- Clear Event Listeners
--- @tparam hash event hash defined in Button.events
+-- @tparam hash event hash defined in [type].events
 function M:remove_actions(event)
 	self.actions[event] = {}
 end

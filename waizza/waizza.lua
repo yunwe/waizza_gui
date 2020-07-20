@@ -3,8 +3,7 @@
 -- © 2020 Saw Yu Nwe, Waizza Studio
 -- https://sawyunwe.com, https://waizza.com
 
---- User Interface module 
--- @module M
+
 
 local Root = require 'waizza.internal.root'
 local Button = require 'waizza.internal.button'
@@ -14,6 +13,8 @@ local ToggleGrooup = require 'waizza.internal.toggle_group'
 local Slider = require 'waizza.internal.slider'
 local ScrollView = require 'waizza.internal.scrollview'
 
+--- User Interface module 
+-- @module M
 local M = {}
 M.button = Button
 M.input = Input

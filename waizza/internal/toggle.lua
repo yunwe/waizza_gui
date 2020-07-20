@@ -4,6 +4,7 @@
 -- https://sawyunwe.com, https://waizza.com
 
 local root = require 'waizza.internal.root'
+local ToggleGroup = require 'waizza.internal.toggle_group'
 
 local TYPE_OF = 'toggle' -- constant
 
@@ -53,12 +54,12 @@ end
 -- Public interface
 ----------------------------------------------------------------------------------------------------
 
---- Input Constructor
+--- Toggle Constructor
 -- @tparam string id Input ID must be identical with Node ID
 -- @tparam string uiname Root GUI Name
 -- @param table config Config table for input apperance (background sprites, and padding)
--- @param string placeholder Placeholder text
--- @param bool setfocus set auto focus
+-- @param userdata group ToggleGroup
+-- @param bool checked set on
 function M:new (id, uiname, config, group, checked)
 	local o = {}
 
@@ -73,15 +74,12 @@ function M:new (id, uiname, config, group, checked)
 	o.config = config
 	o.group = group or nil
 	o.node = gui.get_node(hash(id))
-	o.actions = {
-		[M.events.on_value_change] = {}
-	}
-
+	
 	if group then
 		group:add(o)
 	end
 
-	o:register(TYPE_OF, on_input)
+	o:register(TYPE_OF, M.events, on_input)
 	o:check(checked or false)
 	return o
 end
@@ -96,7 +94,7 @@ function M:check(toggle)
 	self.checked = toggle
 	if self.group then
 		--uncheck other radio buttons in same group
-		self.group:child_value_change(self)
+		ToggleGroup.child_value_change(self)
 	end
 	
 	--change sprite

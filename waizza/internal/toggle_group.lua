@@ -12,14 +12,29 @@ local TYPE_OF = 'toggle_group' -- constant
 -- @module M
 local M = root:new()
 ----------------------------------------------------------------------------------------------------
+-- Private interface
+----------------------------------------------------------------------------------------------------
+
+function M.child_value_change(active_child)
+	if not active_child.checked then
+		return
+	end
+
+	local group = active_child.group
+	for id, child in pairs(group.children) do 
+		if id ~= active_child.id then
+			child:check(false)
+		end
+	end
+end
+----------------------------------------------------------------------------------------------------
 -- Public interface
 ----------------------------------------------------------------------------------------------------
 
---- Input Constructor
+--- ToggleGroup Constructor
 -- @tparam string id Input ID must be identical with Node ID
 -- @tparam string uiname Root GUI Name
--- @param bool allow_switch_off Is it allowed that no toggle is switched on
-function M:new (id, uiname, allow_switch_off)
+function M:new (id, uiname)
 	local o = {}
 
 	assert(id, "Input id is not defined")
@@ -30,33 +45,25 @@ function M:new (id, uiname, allow_switch_off)
 
 	o.id = id
 	o.gui = uiname
-	o.allow_switch_off = allow_switch_off or false
 	o.children = {}
 	
 	return o
 end
 
+--- Add a child toggle to group
+-- @param userdata child Toggle component
 function M:add(child)
 	assert(not self.children[child.id], child.id .. " is alrady added to " .. self.id)
 	self.children[child.id] = child
 end
 
+
+--- Return the active toggle in the group
+-- @return userdata child Active toggle
 function M:result()
 	for id, child in pairs(self.children) do 
 		if child.checked then
 			return child
-		end
-	end
-end
-
-function M:child_value_change(active_child)
-	if not active_child.checked then
-		return
-	end
-	
-	for id, child in pairs(self.children) do 
-		if id ~= active_child.id then
-			child:check(false)
 		end
 	end
 end

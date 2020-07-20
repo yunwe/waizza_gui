@@ -3,8 +3,8 @@
 -- © 2020 Saw Yu Nwe, Waizza Studio
 -- https://sawyunwe.com, https://waizza.com
 
-local gui_config = require('config.gui')
-local waizza = require('waizza.waizza')
+local gui_config = require 'config.gui'
+local waizza = require 'waizza.waizza'
 
 --alias
 local Button = waizza.button
@@ -25,6 +25,7 @@ local function init_nodes(self)
 	--init checkbox (toggle with no toggle-group)
 	theme = gui_config[hash('checkbox')]
 	local magazine_chk = Toggle:new('chk-magazine', self.name, theme)
+	
 	local radio_chk = Toggle:new('chk-radio', self.name, theme)
 	local blog_chk = Toggle:new('chk-blog', self.name, theme)
 
