@@ -141,11 +141,12 @@ Users can focus input with tab, and tab-indices are created sequentially with th
 
 **Input:new (id, uiname, keyboard, config, placeholder, setfocus)**<br/>
 Constructor function for input.<br/>
--- @param string `id` Input ID must be identical with Node ID<br/>
--- @param string `uiname` Root GUI Name<br/>
--- @param table `config` Config table for input apperance (background sprites, and padding)<br/>
--- @param string `placeholder` Placeholder text<br/>
--- @param bool `setfocus` set auto focus<br/>
+@param string `id` Input ID must be identical with Node ID<br/>
+@param string `uiname` Root GUI Name<br/>
+@param string `keyboard` keyboard constant (gui.KEYBOARD_TYPE_?)<br/>
+@param table `config` Config table for input apperance (background sprites, and padding)<br/>
+@param string `placeholder` Placeholder text<br/>
+@param bool `setfocus` set auto focus<br/>
 ```lua
 config =  {
 		padding = 42,
@@ -239,7 +240,9 @@ Constructor function for scroll view.<br/>
 @param bool `vertical` Move in vertical direction<br/>
 @param bool `touchonly` Hide both slider<br/>
 
-The [demo project](https://sawyunwe.com/waizzagui/example.html) provides code samples for all possible use cases.
+---
+![](https://res.cloudinary.com/yunwe/image/upload/v1595322042/GitReadMePhoto/waizza_gui/example.png)
+The [demo project](https://www.sawyunwe.com/portfolio/waizza-gui/default/__htmlLaunchDir/waizza_gui/index.html) provides code samples for all possible use cases.
 
 
 
