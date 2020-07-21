@@ -111,7 +111,7 @@ end
 local function release(ui, action)
 	local active = root.get_active(ui)
 	if is_pressed(active) then
-		active.ispressed = false
+		active:remove_active()
 	end
 end
 
@@ -140,6 +140,11 @@ local function on_input(ui, action_id, action)
 	if action_id == nil then 
 		moving(ui, action)
 	end
+end
+
+--- call from root.remove_active(ui, typeof)
+function M:remove_active()
+	self.ispressed = false
 end
 ----------------------------------------------------------------------------------------------------
 -- Public interface

@@ -121,8 +121,13 @@ function M.get_active(ui)
 	return map[ui][map.activenode] 
 end
 
-function M.remove_active(ui)
-	map.activenode = -1
+function M.remove_active(ui, typeof)
+	local active = M.get_active(ui)
+	
+	if active and (not typeof or active.typeof == typeof) then
+		active:remove_active()
+		map.activenode = -1
+	end
 end
 
 function M.on_input(ui, action_id, action)

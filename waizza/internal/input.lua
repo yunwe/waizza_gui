@@ -133,21 +133,10 @@ local function move_cursor(ui, amount)
 		set_cursor_pos(o, o.cursor_pos + amount)
 	end
 end
-	
-local function remove_active(ui)
-	local o = root.get_active(ui)
-	if o and o.typeof == TYPE_OF then
-		root.remove_active(ui)
-		o:remove_focus()
-	end
-end
 
 local function tab_index(ui)
 	local o = root.get_active(ui)
 	if o and o.typeof == TYPE_OF then
-		root.remove_active(ui)
-		o:remove_focus()
-		
 		local next_index = o.tabindex + 1
 		if #tab_index_table >= next_index then
 			tab_index_table[next_index]:focus()
@@ -164,7 +153,6 @@ local function on_input(ui, action_id, action)
 	--[[Checking button click --]]
 	if action_id == hash("touch") and action.pressed 
 	then
-		remove_active(ui)
 		local node = pick_node(ui, action)
 		if node then
 			node:focus()
@@ -180,7 +168,7 @@ local function on_input(ui, action_id, action)
 		elseif action_id == hash("right") then
 			move_cursor(ui, 1)
 		elseif action_id == hash("enter") then
-			remove_active(ui)
+			root.remove_active(ui, TYPE_OF)
 		elseif  action_id == hash("tab") then
 			tab_index(ui)
 		end
@@ -192,6 +180,10 @@ local function on_input(ui, action_id, action)
 	end
 end
 
+--- call from root.remove_active(ui, typeof)
+function M:remove_active()
+	self:remove_focus()
+end
 ----------------------------------------------------------------------------------------------------
 -- Public interface
 ----------------------------------------------------------------------------------------------------

@@ -55,7 +55,7 @@ end
 
 --- Button state[on mouse/pointer hover] call from on_input
 -- @tparam table o Button
-local function set_active_node(o)
+local function set_hover(o)
     root.set_active(o)
     o.ishover = true
 
@@ -64,25 +64,6 @@ local function set_active_node(o)
 
     --play callback list
     o:do_actions(Button.events.pointer_enter)
-end
-
---- Button state[on mouse/pointer exit] call from on_input
--- @string ui Active UI Name
-local function remove_active(ui)
-    local o = root.get_active(ui)
-    
-    if o and o.typeof == TYPE_OF then
-        root.remove_active()
-        
-        o.ishover = false
-        o.ispressed = false
-
-        --change sprite
-        o:play_sprite('normal')
-
-        --play callback list
-        o:do_actions(Button.events.pointer_exit)
-    end
 end
 
 --- pick node from ui, filter with type
@@ -118,13 +99,22 @@ local function on_input(ui, action_id, action)
         local node = pick_node(ui, action)
         if node then
             if not node.ishover then
-                remove_active(ui)
-                set_active_node(node)
+                set_hover(node)
             end
         else
-            remove_active(ui)
+            root.remove_active(ui, TYPE_OF)
         end
     end
+end
+
+--- Button state[on mouse/pointer exit] call from root.remove_active(ui, typeof)
+function Button:remove_active()
+    self.ishover = false
+    self.ispressed = false
+
+    --change sprite
+    self:play_sprite('normal')
+    self:do_actions(Button.events.pointer_exit)
 end
 ----------------------------------------------------------------------------------------------------
 -- Public interface

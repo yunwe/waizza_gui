@@ -109,9 +109,7 @@ end
 local function release(ui, action)
 	local active = root.get_active(ui)
 	if is_pressed(active) then
-		active.ispressed = false
-		active.origin = nil
-		active.gap = nil
+		active:remove_active()
 	end
 end
 
@@ -136,6 +134,13 @@ local function on_input(ui, action_id, action)
 	if action_id == nil then 
 		moving(ui, action)
 	end
+end
+
+--- call from root.remove_active(ui, typeof)
+function M:remove_active()
+	self.ispressed = false
+	self.origin = nil
+	self.gap = nil
 end
 ----------------------------------------------------------------------------------------------------
 -- Public interface
@@ -164,10 +169,6 @@ function M:new (id, uiname, horizontal, vertical, touchonly)
 
 	o.node_table = get_node(o)
 	o.node = o.node_table.viewport
-
-	o.actions = {
-		[M.events.on_value_change] = {}
-	}
 
 	o:register(TYPE_OF, M.events, on_input)
 	return o
