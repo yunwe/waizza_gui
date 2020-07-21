@@ -242,6 +242,7 @@ Constructor function for scroll view.<br/>
 
 ---
 ![](https://res.cloudinary.com/yunwe/image/upload/v1595322042/GitReadMePhoto/waizza_gui/example.png)
+
 The [demo project](https://www.sawyunwe.com/portfolio/waizza-gui/default/__htmlLaunchDir/waizza_gui/index.html) provides code samples for all possible use cases.
 
 
