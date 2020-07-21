@@ -3,14 +3,6 @@ fonts {
   name: "default"
   font: "/waizza/assets/font/default.font"
 }
-fonts {
-  name: "myanmar"
-  font: "/waizza/assets/font/myanmar.font"
-}
-fonts {
-  name: "japanese"
-  font: "/waizza/assets/font/japanese.font"
-}
 textures {
   name: "main"
   texture: "/waizza/assets/prefab.atlas"
@@ -437,7 +429,7 @@ nodes {
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
   text: ""
-  font: "japanese"
+  font: "default"
   id: "input-name/text"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -712,7 +704,7 @@ nodes {
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
   text: ""
-  font: "japanese"
+  font: "default"
   id: "input-password/text"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
@@ -987,7 +979,7 @@ nodes {
   type: TYPE_TEXT
   blend_mode: BLEND_MODE_ALPHA
   text: ""
-  font: "japanese"
+  font: "default"
   id: "input-number/text"
   xanchor: XANCHOR_NONE
   yanchor: YANCHOR_NONE
